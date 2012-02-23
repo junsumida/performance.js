@@ -19,17 +19,17 @@ function performance_check(e, times,func){
 }
 
 function loop1(){
-		for(var n=0; n<1000000; n++){
+		for(var n=0; n<10000000; n++){
 		}
 }
 function loop2(){
 	var n=0;
-	for(n; n<1000000; n++){
+	for(n; n<10000000; n++){
 	}	
 }
 function loop3(){
 	var n=0;
-	for(; n<1000000; n++){
+	for(; n<10000000; n++){
 	}
 }
 
