@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+
+<title>JS Performance Checking</title>
+<link rel="index" href="/">
+
+<!-- <link rel="stylesheet" href="./css/style.css"> -->
+
+<!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+</head>
+<body class="index">
+<article>
+	<h1>variable declaration in a for-loop</h1>
+	<section>
+		<h2>case 1</h2>
+		<pre>
+		for(var i=0; i<100000; i++){
+		}
+		</pre>
+		<p id="vd_case1"></p>
+	</section>
+	<section>
+		<h2>case 2</h2>
+		<pre>
+		var i=0;
+		for(i; i<100000; i++){
+		}
+		</pre>
+		<p id="vd_case2"></p>
+	</section>
+	<section>
+		<h2>case 3</h2>
+		<pre>
+		var i=0;
+		for(; i<100000; i++){
+		}
+		</pre>
+		<p id="vd_case3"></p>
+	</section>
+</article>
+<script src="./performance.js"></script>
+</body>
+</html>
