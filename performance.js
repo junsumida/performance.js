@@ -5,43 +5,83 @@ if(document.textContent != undefined){
 	console.log(typeof document.textContent);
 }
 
-function performance_check(e, times,func){
-	var gap = null;
-	for(var k=0; k<times; k++){		
-		var begin = new Date();
-		func();
-		var end = new Date();
-		gap += end.getTime() - begin.getTime();
-		e.textContent += end.getTime() - begin.getTime();
-		e.textContent += ",";
+var jspa = (function(){
+	function Jspa(testcases){
+		var tests = [];
+		this.test = function(testName, testCase){	
+			tests.push(testName);
+			var id = tests.length;
+			document.body.innerHTML += this.template(id);
+			var e = document.getElementById("case"+id);
+			e.getElementsByTagName("pre")[0].textContent += testCase.toString();
+			var csv = e.getElementsByClassName("csv")[0];
+			var avg = this.analysis(csv, 100, testCase);
+			e.getElementsByClassName("analysis")[0].innerHTML += "<dt>Avg.</dt><dd>"+ avg +"</dd>"
+		}
+		this.template = function(id){
+			var tmp = "<section id='case" + id +"' class='jspa'>"+
+									"<h1>case"+id+"</h1>"+
+									"<pre></pre>"+
+									"<textarea class='csv'></textarea>"+
+									"<p class='analysis'>"+
+										"<dl>"+
+										"</dl>"+
+									"</p>"+
+								"</section>";
+			return tmp;
+		}
+		this.analysis = function(e, times, func){
+			var gap = null;
+			for(var k=0; k<times; k++){		
+				var begin = new Date();
+				func();
+				var end = new Date();
+				gap += end.getTime() - begin.getTime();
+				e.textContent += end.getTime() - begin.getTime();
+				e.textContent += ",";
+			}
+			return gap = gap/times;		
+		}
 	}
-	return gap = gap/times;
-}
 
-function loop1(){
+	return new Jspa();
+})(this);
+
+var testCases = [
+	function(){
 		for(var n=0; n<10000000; n++){
 		}
-}
-function loop2(){
-	var n=0;
-	for(n; n<10000000; n++){
+	},
+	function(){
+		var n=0;
+		for(n; n<10000000; n++){
+		}	
+	},
+	function(){
+		var n=0;
+		for(; n<10000000; n++){
+		}	
 	}	
-}
-function loop3(){
-	var n=0;
-	for(; n<10000000; n++){
+];
+
+var testCases2 = [
+	function(){
+		for(var i=0; i<array.length; i++){
+		}	
+	},
+	function(){
+		var len = array.length;
+		for(var i=0; i<len; i++){
+		}
 	}
+];
+
+var array = [];
+for(var i=0; i<100000; i++){
+	array.push(i);
 }
 
 window.onload = function(){
-	var e = document.getElementById("vd_case1");		
-	var result = performance_check(e, 2000,loop1);
-	e.innerHTML += '<span style="color:black;font-weight:bold;">avg:</span><span style="color:red;font-weight:bold;">' + result + '</span>';
-	var e2 = document.getElementById("vd_case2");
-	var result2 = performance_check(e2, 2000,loop2);
-	e2.innerHTML += '<span style="color:black;font-weight:bold;">avg:</span><span style="color:red;font-weight:bold;">' + result2 + '</span>';
-	var e3 = document.getElementById("vd_case3");
-	var result3 = performance_check(e3, 2000,loop3);
-	e3.innerHTML += '<span style="color:black;font-weight:bold;">avg:</span><span style="color:red;font-weight:bold;">' + result3 + '</span>';
-
+	jspa.test("test name", testCases[0]);
+	jspa.test("test2", testCases[1]);
 }
