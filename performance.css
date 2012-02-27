@@ -1,6 +1,12 @@
 .jspa p.csv{
 	width:100%;	
 }
+
+.jspa textarea{
+	width:99%;
+	height:50px;
+}
+
 .jspa dt{
 	font-weight:bold;
 }
