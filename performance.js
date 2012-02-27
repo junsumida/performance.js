@@ -1,3 +1,4 @@
+"use strict";
 if(document.textContent != undefined){
 	console.log("document.content doesn't exist");
 }else{
@@ -11,13 +12,13 @@ var jspa = (function(){
 		this.test = function(testName, testCase){	
 			tests.push(testName);
 			var id = tests.length;
-			document.body.innerHTML += this.template(id);
+			document.body.getElementsByClassName("container")[0].innerHTML += this.template(id);
 			var e = document.getElementById("case"+id);
 			e.getElementsByTagName("pre")[0].textContent += testCase.toString();
 			var csv = e.getElementsByClassName("csv")[0];
 			var avg = this.analysis(csv, 100, testCase);
-			e.getElementsByClassName("analysis")[0].innerHTML += "<dt>Avg.</dt><dd>"+ avg +"</dd>"
-		}
+			e.getElementsByClassName("analysis")[0].innerHTML += "<dt>Avg.</dt><dd>"+ avg +"</dd>";
+		};
 		this.template = function(id){
 			var tmp = "<section id='case" + id +"' class='jspa'>"+
 									"<h1>case"+id+"</h1>"+
@@ -29,7 +30,7 @@ var jspa = (function(){
 									"</p>"+
 								"</section>";
 			return tmp;
-		}
+		};
 		this.analysis = function(e, times, func){
 			var gap = null;
 			for(var k=0; k<times; k++){		
@@ -40,12 +41,12 @@ var jspa = (function(){
 				e.textContent += end.getTime() - begin.getTime();
 				e.textContent += ",";
 			}
-			return gap = gap/times;		
-		}
+			return gap/times;		
+		};
 	}
 
 	return new Jspa();
-})(this);
+})();
 
 var testCases = [
 	function(){
@@ -84,4 +85,4 @@ for(var i=0; i<100000; i++){
 window.onload = function(){
 	jspa.test("test name", testCases[0]);
 	jspa.test("test2", testCases[1]);
-}
+};
