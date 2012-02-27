@@ -1,7 +1,7 @@
 module("method test", {setup:function(){
 }});
 
-test("textContent", function(){
+test("dom", function(){
 	if(document.body.textContent){
 		ok(true, "textContent method exists.");
 	}else{
@@ -24,4 +24,25 @@ test("template test", function(){
 	}else{
 		ok(false);
 	}
-});	
+});
+
+module("average test", {setup:function(){
+	dummy = [100, 75, 50, 25, 0];	
+}});
+
+test("average test", function(){
+	if(jspa.average(dummy) === 50){
+		ok(true, "avg. of 100, 50, 75, 25, 0 is 50.");
+	}else{
+		ok(false);
+	}
+});
+
+test("standard deviation", function(){
+	if(typeof jspa.sd(dummy === "number")){
+		ok(true);
+	}else{
+		ok(false);
+		console.log(jspa.sd(dummy));
+	}
+});
