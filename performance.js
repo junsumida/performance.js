@@ -1,10 +1,4 @@
 "use strict";
-if(document.textContent != undefined){
-	console.log("document.content doesn't exist");
-}else{
-	console.log("document.content exists.");
-	console.log(typeof document.textContent);
-}
 
 var jspa = (function(){
 	function Jspa(testcases){
