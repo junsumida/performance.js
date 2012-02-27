@@ -7,11 +7,18 @@ var jspa = (function(){
 			tests.push(testName);
 			var id = tests.length;
 			document.body.getElementsByClassName("container")[0].innerHTML += this.template(id);
+
 			var e = document.getElementById("case"+id);
+			var results = this.analysis(100, testCase);
+			var avg     = this.average(results);
+			var sd  	  = this.sd(results);
+			var trial  = this.trial(avg, 10000000);
+			
 			e.getElementsByTagName("pre")[0].textContent += testCase.toString();
-			var csv = e.getElementsByClassName("csv")[0];
-			var avg = this.analysis(csv, 100, testCase);
 			e.getElementsByClassName("analysis")[0].innerHTML += "<dt>Avg.</dt><dd>"+ avg +"</dd>";
+			e.getElementsByClassName("analysis")[0].innerHTML += "<dt>SD</dt><dd>"+ sd +"</dd>";
+			e.getElementsByClassName("analysis")[0].innerHTML += "<dt>trials/msec</dt><dd>"+ trial +"</dd>";
+			e.getElementsByTagName("textarea")[0].innerHTML = results.toString();
 		};
 		this.template = function(id){
 			var tmp = "<section id='case" + id +"' class='jspa'>"+
@@ -25,58 +32,44 @@ var jspa = (function(){
 								"</section>";
 			return tmp;
 		};
-		this.analysis = function(e, times, func){
+		this.analysis = function(times, func){
 			var gap = null;
-			for(var k=0; k<times; k++){		
+			var results = [];
+			for(var i=0; i<times; i++){		
 				var begin = new Date();
 				func();
 				var end = new Date();
-				gap += end.getTime() - begin.getTime();
-				e.textContent += end.getTime() - begin.getTime();
-				e.textContent += ",";
+				results[i] = end.getTime() - begin.getTime();
 			}
-			return gap/times;		
+			return results;
 		};
+		this.average = function(array){
+			var n = array.length;
+			var sum = 0;
+			for(var i=0; i<n; i++){
+				sum += array[i];
+			}
+			return sum/n;
+		};
+		this.sd = function(array){
+			var sd = 0;
+			var n = array.length;
+			var avg = this.average(array);
+			for(var i=0; i<n; i++){
+				sd += Math.pow((array[i] - avg), 2);
+			}
+			sd = Math.sqrt(sd/(n-1));
+			return sd;
+		}
+		this.trial = function(avg, trial){
+			return Math.floor(trial/avg);
+		};
+		/*
+		this.ttest = function(r1, r2){
+			(this.average(r1) - this.average(r2)) / Math.sqrt( (/(r1.length -1)) + (/(r2.length - 1)) );
+		}
+		*/
 	}
 
 	return new Jspa();
 })();
-
-var testCases = [
-	function(){
-		for(var n=0; n<10000000; n++){
-		}
-	},
-	function(){
-		var n=0;
-		for(n; n<10000000; n++){
-		}	
-	},
-	function(){
-		var n=0;
-		for(; n<10000000; n++){
-		}	
-	}	
-];
-
-var testCases2 = [
-	function(){
-		for(var i=0; i<array.length; i++){
-		}	
-	},
-	function(){
-		var len = array.length;
-		for(var i=0; i<len; i++){
-		}
-	}
-];
-
-var array = [];
-for(var i=0; i<100000; i++){
-	array.push(i);
-}
-
-window.onload = function(){
-	jspa.test("test name", testCases[0]);
-	jspa.test("test2", testCases[1]);
-};
