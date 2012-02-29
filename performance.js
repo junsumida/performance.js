@@ -1,24 +1,24 @@
-"use strict";
-
 var jspa = (function(){
+	"use strict";
+
 	function Jspa(testcases){
 		var tests = [];
-		this.test = function(testName, testCase){	
+		this.test = function(testName, testCase){
 			tests.push(testName);
 			var id = tests.length;
 			document.body.getElementsByClassName("container")[0].innerHTML += this.template(id);
 
-			var e = document.getElementById("case"+id);
 			var results = this.analysis(100, testCase);
 			var avg     = this.average(results);
-			var sd  	  = this.sd(results);
-			var trial  = this.trial(avg, 10000000);
-			
+			var sd			= this.sd(results);
+			var trial   = this.trial(avg, 10000000);
+
+			var e = document.getElementById("case"+id);
 			e.getElementsByTagName("pre")[0].textContent += testCase.toString();
 			e.getElementsByClassName("analysis")[0].innerHTML += "<dt>Avg.</dt><dd>"+ avg +"</dd>";
 			e.getElementsByClassName("analysis")[0].innerHTML += "<dt>SD</dt><dd>"+ sd +"</dd>";
 			e.getElementsByClassName("analysis")[0].innerHTML += "<dt>trials/msec</dt><dd>"+ trial +"</dd>";
-			e.getElementsByTagName("textarea")[0].innerHTML = results.toString();
+			e.getElementsByTagName("textarea")[0].innerHTML    = results.toString();
 		};
 		this.template = function(id){
 			var tmp = "<section id='case" + id +"' class='jspa'>"+
@@ -60,15 +60,10 @@ var jspa = (function(){
 			}
 			sd = Math.sqrt(sd/(n-1));
 			return sd;
-		}
+		};
 		this.trial = function(avg, trial){
 			return Math.floor(trial/avg);
 		};
-		/*
-		this.ttest = function(r1, r2){
-			(this.average(r1) - this.average(r2)) / Math.sqrt( (/(r1.length -1)) + (/(r2.length - 1)) );
-		}
-		*/
 	}
 
 	return new Jspa();
