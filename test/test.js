@@ -1,3 +1,8 @@
+var dummy;
+
+(function(){
+"use strict";
+
 module("method test", {setup:function(){
 }});
 
@@ -42,7 +47,25 @@ test("standard deviation", function(){
 	if(typeof jspa.sd(dummy === "number")){
 		ok(true);
 	}else{
-		ok(false);
+		ok(false, "sd method returns not a number. (not NaN)");
 		console.log(jspa.sd(dummy));
 	}
+	
+	var _avg = jspa.average(dummy);
+	var _sd  = jspa.sd(dummy, _avg);
+	if(_sd === 39.528470752104745){
+		ok(true);
+	}else{
+		ok(false, "calculation in the sd method seems wrong: " + _sd);
+	}
+	
+	var _sd = jspa.sd(dummy);
+	if(_sd === 39.528470752104745){
+		ok(true);
+	}else{
+		ok(false, "argument error:" + _sd);
+	}
 });
+
+})();
+

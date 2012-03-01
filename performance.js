@@ -10,7 +10,7 @@ var jspa = (function(){
 
 			var results = this.analysis(100, testCase);
 			var avg     = this.average(results);
-			var sd			= this.sd(results);
+			var sd			= this.sd(results, avg);
 			var trial   = this.trial(avg, 10000000);
 
 			var e = document.getElementById("case"+id);
@@ -51,10 +51,10 @@ var jspa = (function(){
 			}
 			return sum/n;
 		};
-		this.sd = function(array){
+		this.sd = function(array, avg){
 			var sd = 0;
 			var n = array.length;
-			var avg = this.average(array);
+			var avg = avg || this.average(array);
 			for(var i=0; i<n; i++){
 				sd += Math.pow((array[i] - avg), 2);
 			}
