@@ -12,11 +12,14 @@ var jspa = (function(){
 			var avg     = this.average(results);
 			var sd			= this.sd(results, avg);
 			var trial   = this.trial(avg, 10000000);
+			var ci 			= this.ci(avg, sd);
 
 			var e = document.getElementById("case"+id);
 			e.getElementsByTagName("pre")[0].textContent += testCase.toString();
 			e.getElementsByClassName("analysis")[0].innerHTML += "<dt>Avg.</dt><dd>"+ avg +"</dd>";
 			e.getElementsByClassName("analysis")[0].innerHTML += "<dt>SD</dt><dd>"+ sd +"</dd>";
+			e.getElementsByClassName("analysis")[0].innerHTML += "<dt>Unbiased Variance</dt><dd>"+ this.variance(results, avg, true);  +"</dd>";
+			e.getElementsByClassName("analysis")[0].innerHTML += "<dt>Confidence Interval (99%)</dt><dd>"+ ci.min +"<=avg<="+ ci.max +"</dd>";
 			e.getElementsByClassName("analysis")[0].innerHTML += "<dt>trials/msec</dt><dd>"+ trial +"</dd>";
 			e.getElementsByTagName("textarea")[0].innerHTML    = results.toString();
 		};
@@ -51,16 +54,32 @@ var jspa = (function(){
 			}
 			return sum/n;
 		};
-		this.sd = function(array, avg){
-			var sd = 0;
-			var n = array.length;
+		this.variance = function(array, avg, unbiased){
+			var v = 0;
+			var n   = array.length;	
+			if(unbiased){
+				n--;
+			}
 			var avg = avg || this.average(array);
 			for(var i=0; i<n; i++){
-				sd += Math.pow((array[i] - avg), 2);
+				v += Math.pow((array[i] - avg), 2);
 			}
-			sd = Math.sqrt(sd/(n-1));
-			return sd;
+			return v/n;
+		}
+		this.sd = function(array, avg, biased){
+			var n = array.length;
+			var avg = avg || this.average(array);
+				
+			return Math.sqrt(this.variance(array, avg, biased));
 		};
+		//confidence interval
+		//@TODO not beautiful
+		this.ci = function(avg, sd){
+			var min = avg - 2.58 * sd;
+			var max = avg + 2.58 * sd;
+
+			return {max:max, min:min}; 
+		}
 		this.trial = function(avg, trial){
 			return Math.floor(trial/avg);
 		};

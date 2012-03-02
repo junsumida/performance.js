@@ -31,7 +31,7 @@ test("template test", function(){
 	}
 });
 
-module("average test", {setup:function(){
+module("given [100, 75, 50, 25 ,0]", {setup:function(){
 	dummy = [100, 75, 50, 25, 0];	
 }});
 
@@ -44,28 +44,100 @@ test("average test", function(){
 });
 
 test("standard deviation", function(){
-	if(typeof jspa.sd(dummy === "number")){
+	if(typeof jspa.sd(dummy, null, true) === "number"){
 		ok(true);
 	}else{
 		ok(false, "sd method returns not a number. (not NaN)");
-		console.log(jspa.sd(dummy));
 	}
 	
 	var _avg = jspa.average(dummy);
-	var _sd  = jspa.sd(dummy, _avg);
-	if(_sd === 39.528470752104745){
+	var _sd  = jspa.sd(dummy, _avg, false);
+	if(_sd === 35.35533905932738){
 		ok(true);
 	}else{
 		ok(false, "calculation in the sd method seems wrong: " + _sd);
 	}
 	
-	var _sd = jspa.sd(dummy);
-	if(_sd === 39.528470752104745){
+	var _sd = jspa.sd(dummy, null, false);
+	if(_sd === 35.35533905932738){
+		ok(true);
+	}else{
+		ok(false, "argument error:" + _sd);
+	}
+
+	var _avg = jspa.average(dummy);
+	var _sd  = jspa.sd(dummy, _avg, true);
+	if(_sd === 30.618621784789728){
+		ok(true);
+	}else{
+		ok(false, "calculation in the sd method seems wrong: " + _sd);
+	}
+	
+	var _sd = jspa.sd(dummy, null, true);
+	if(_sd === 30.618621784789728){
 		ok(true);
 	}else{
 		ok(false, "argument error:" + _sd);
 	}
 });
 
+test("variance", function(){
+	var avg = jspa.average(dummy); 
+	if(typeof jspa.variance(dummy, avg) === "number"){
+		ok(true);
+	}else{
+		ok(false, "sd method returns not a number. (not NaN)");
+	}
+
+	var _avg = jspa.average(dummy);
+	var _v  = jspa.variance(dummy, _avg);
+	if(_v === 1250){
+		ok(true);
+	}else{
+		ok(false, "calculation in the 'variance' method seems wrong: " + _v);
+	}
+	
+	var _v = jspa.variance(dummy);
+	if(_v === 1250){
+		ok(true);
+	}else{
+		ok(false, "argument error:" + _v);
+	}
+});
+
+test("unbiased variance", function(){
+	var avg = jspa.average(dummy); 
+	if(typeof jspa.variance(dummy, avg, true) === "number"){
+		ok(true);
+	}else{
+		ok(false, "sd method returns not a number. (not NaN)");
+	}
+
+	var _avg = jspa.average(dummy);
+	var _v  = jspa.variance(dummy, _avg, true);
+	if(_v === 937.5){
+		ok(true);
+	}else{
+		ok(false, "calculation in the 'variance' method seems wrong: " + _v);
+	}
+	
+	var _v = jspa.variance(dummy, null ,true);
+	if(_v === 937.5){
+		ok(true);
+	}else{
+		ok(false, "argument error:" + _v);
+	}
+});
+
+test("confidence interval", function(){
+	var avg = jspa.average(dummy);
+	var sd  = jspa.sd(dummy, avg, true);
+	var min = avg - 2.58 * sd;
+	var max = avg + 2.58 * sd;
+
+	var ci = jspa.ci(avg, sd);
+	deepEqual(ci.max, max, "max of confidence interval");
+	deepEqual(ci.min, min, "min of confidence interval");
+});
 })();
 
