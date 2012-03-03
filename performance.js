@@ -13,7 +13,6 @@ var jspa = (function(){
 			var sd			= this.sd(results, avg);
 			var trial   = this.trial(avg, 10000000);
 			var ci 			= this.ci(avg, sd);
-
 			var e = document.getElementById("case"+id);
 			e.getElementsByTagName("pre")[0].textContent += testCase.toString();
 			e.getElementsByClassName("analysis")[0].innerHTML += "<dt>Avg.</dt><dd>"+ avg +"</dd>";
@@ -83,6 +82,17 @@ var jspa = (function(){
 		this.trial = function(avg, trial){
 			return Math.floor(trial/avg);
 		};
+		this.ftest = function(a1, a2){
+			var v1 = this.variance(a1, null, true);
+			var v2 = this.variance(a2, null, true);
+			if(v1 >= v2){
+				var f = v1/v2;
+			}else{
+				var f = v2/v1;
+			}
+
+			return f;
+		}
 	}
 
 	return new Jspa();
